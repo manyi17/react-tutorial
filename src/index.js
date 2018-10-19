@@ -133,7 +133,7 @@ class Game extends React.Component {
         ? "Go to move #" +
           move +
           " " +
-          (move % 2 === 0 ? "X" : "O") +
+          (move % 2 === 0 ? "O" : "X") +
           "(" +
           this.state.history[move].clicked +
           ")"

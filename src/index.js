@@ -46,6 +46,13 @@ function calculateWinner(squares) {
       };
     }
   }
+
+  if (squares.every(value => value)) {
+    return {
+      winner: "draw",
+      line: null
+    };
+  }
   return {
     winner: null,
     line: null
@@ -97,6 +104,20 @@ class Game extends React.Component {
       stepNumber: 0,
       sortAsc: true
     };
+  }
+
+  resetGame() {
+    this.setState({
+      history: [
+        {
+          squares: Array(9).fill(null),
+          clicked: null
+        }
+      ],
+      xIsNext: true,
+      stepNumber: 0,
+      sortAsc: true
+    });
   }
 
   toggleAsc() {
@@ -163,8 +184,11 @@ class Game extends React.Component {
       );
     });
     let status;
-    if (winner.winner) {
+    if (winner.winner && winner.winner !== "draw") {
       status = "Winner: " + winner.winner;
+    } else if (winner.winner === "draw") {
+      status = "The game is a DRAW ";
+      window.alert("This game is a DRAW");
     } else {
       status = "Next player: " + (this.state.xIsNext ? "X" : "O");
     }
@@ -184,6 +208,7 @@ class Game extends React.Component {
             <button onClick={() => this.toggleAsc()}>
               {this.state.sortAsc ? "Sort descending" : "Sort ascending"}
             </button>
+            <button onClick={() => this.resetGame()}>Reset game</button>
           </div>
           {this.state.sortAsc ? <ol>{moves}</ol> : <ol>{moves.reverse()}</ol>}
         </div>

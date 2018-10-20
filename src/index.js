@@ -81,8 +81,15 @@ class Game extends React.Component {
         }
       ],
       xIsNext: true,
-      stepNumber: 0
+      stepNumber: 0,
+      sortAsc: true
     };
+  }
+
+  toggleAsc() {
+    this.setState({
+      sortAsc: !this.state.sortAsc
+    });
   }
 
   handleClick(i) {
@@ -156,7 +163,12 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
-          <ol>{moves}</ol>
+          <div>
+            <button onClick={() => this.toggleAsc()}>
+              {this.state.sortAsc ? "Sort descending" : "Sort ascending"}
+            </button>
+          </div>
+          {this.state.sortAsc ? <ol>{moves}</ol> : <ol>{moves.reverse()}</ol>}
         </div>
       </div>
     );

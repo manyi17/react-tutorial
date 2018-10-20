@@ -135,12 +135,15 @@ class Game extends React.Component {
           " " +
           (move % 2 === 0 ? "O" : "X") +
           "(" +
-          this.state.history[move].clicked +
+          history[move].clicked +
           ")"
         : "Go to game start";
       return (
+        // bold for current/selected item
         <li key={move}>
-          <button onClick={() => this.jumpTo(move)}>{desc}</button>
+          <button onClick={() => this.jumpTo(move)}>
+            {move === this.state.stepNumber ? <b>{desc}</b> : desc}
+          </button>
         </li>
       );
     });

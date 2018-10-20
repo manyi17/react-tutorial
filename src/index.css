@@ -41,6 +41,10 @@ ul {
   background: #ddd;
 }
 
+.square.highlighted {
+  background: blueviolet;
+}
+
 .game {
   display: flex;
   flex-direction: row;

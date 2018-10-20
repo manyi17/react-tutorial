@@ -13,8 +13,12 @@ import "./index.css";
 // }
 // Replace Square class to function component
 function Square(props) {
+  let className = "square";
+  if (props.highlight) {
+    className += " highlighted";
+  }
   return (
-    <button className="square" onClick={props.onClick}>
+    <button className={className} onClick={props.onClick}>
       {props.value}
     </button>
   );
@@ -36,18 +40,25 @@ function calculateWinner(squares) {
     const [a, b, c] = lines[i];
     // if all states are the same (same symbol)
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+      return {
+        winner: squares[a],
+        line: lines[i]
+      };
     }
   }
-  return null;
+  return {
+    winner: null,
+    line: null
+  };
 }
 
 class Board extends React.Component {
-  renderSquare(i) {
+  renderSquare(i, highlight) {
     return (
       <Square
         value={this.props.squares[i]}
         onClick={() => this.props.onClick(i)}
+        highlight={highlight}
       />
     );
   }
@@ -57,7 +68,9 @@ class Board extends React.Component {
     var rows = [];
     for (var i = 0; i < 3; i++) {
       for (var j = i * 3; j < i * 3 + 3; j++) {
-        squares.push(this.renderSquare(j));
+        const highlight =
+          this.props.winnerLine && this.props.winnerLine.includes(j);
+        squares.push(this.renderSquare(j, highlight));
       }
       rows.push(
         <div key={i} className="board-row">
@@ -103,7 +116,7 @@ class Game extends React.Component {
 
     // Creates a copy of the array for immutability
     const squares = current.squares.slice();
-    if (calculateWinner(squares) || squares[i]) {
+    if (calculateWinner(squares).winner || squares[i]) {
       return;
     }
     squares[i] = this.state.xIsNext ? "X" : "O";
@@ -150,8 +163,8 @@ class Game extends React.Component {
       );
     });
     let status;
-    if (winner) {
-      status = "Winner: " + winner;
+    if (winner.winner) {
+      status = "Winner: " + winner.winner;
     } else {
       status = "Next player: " + (this.state.xIsNext ? "X" : "O");
     }
@@ -159,7 +172,11 @@ class Game extends React.Component {
     return (
       <div className="game">
         <div className="game-board">
-          <Board squares={current.squares} onClick={i => this.handleClick(i)} />
+          <Board
+            squares={current.squares}
+            onClick={i => this.handleClick(i)}
+            winnerLine={winner.line}
+          />
         </div>
         <div className="game-info">
           <div>{status}</div>
